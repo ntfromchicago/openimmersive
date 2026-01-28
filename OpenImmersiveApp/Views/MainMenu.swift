@@ -11,18 +11,17 @@ import SwiftUI
 struct MainMenu: View {
     var body: some View {
         VStack {
-            Image("openimmersive-logo")
+            Image("new-logo-flat")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 255)
+                .frame(width: 256)
                 .padding(20)
             
-            Text("OpenImmersive")
+            Text("OpenImmersive \(version)")
                 .font(.largeTitle)
-            
-            Text("A free and open source immersive video player for the Apple Vision Pro.")
-                .font(.headline)
-            
+                .accessibilityHint("A free, open source immersive video player")
+                .help("A free, open source immersive video player")
+                        
             Spacer()
             
             SourcesList()
@@ -30,12 +29,10 @@ struct MainMenu: View {
             
             Spacer()
             
-            Text("OpenImmersive \(version) \nMaintained by [Anthony Maës](https://www.linkedin.com/in/portemantho/) & [Acute Immersive 🐶](https://www.acuteimmersive.com/)")
-                .contentShape(.rect)
+            Text("Maintained by [Anthony Maës](https://www.linkedin.com/in/portemantho/) & [Acute Immersive 🐶](https://www.acuteimmersive.com/)")
                 .padding(.horizontal, 40)
                 .padding(.vertical)
                 .frame(maxWidth: .infinity, alignment: .bottomLeading)
-            
         }
         .padding()
     }

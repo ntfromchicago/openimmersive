@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "openimmersiveicon-back.png",
+      "filename" : "back.png",
       "idiom" : "vision",
       "scale" : "2x"
     }
