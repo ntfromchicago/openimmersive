@@ -35,6 +35,11 @@ struct MainMenu: View {
                 .frame(maxWidth: .infinity, alignment: .bottomLeading)
         }
         .padding()
+        .ornament(attachmentAnchor: .scene(.bottom)) {
+            SourcesPickerControls()
+                .padding(.horizontal, 24)
+                .padding(.vertical, 16)
+        }
     }
     
     var version: String {
