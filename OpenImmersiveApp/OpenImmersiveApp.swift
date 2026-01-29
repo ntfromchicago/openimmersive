@@ -87,9 +87,8 @@ struct OpenImmersiveApp: App {
                 appState.applyFormatOptions(from: item)
                 appState.selectedItem = item
             }
-            .frame(width: 720, height: 720)
+            .frame(minWidth: 720, maxWidth: 720, minHeight: 720, maxHeight: 720)
         }
-        // .windowResizability(.fixed)
         .defaultSize(width: 720, height: 720)
         .environment(appState)
         
