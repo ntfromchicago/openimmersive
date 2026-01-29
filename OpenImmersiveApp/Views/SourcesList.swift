@@ -174,10 +174,12 @@ struct SourcePickerButton<Label: View, Picker: View>: View {
     let label: () -> Label
     let picker: () -> Picker
     @State private var isHovered: Bool = false
+    @State private var isFocused: Bool = false
     @GestureState private var isPressed: Bool = false
     
     var body: some View {
-        let highlightOpacity: Double = isPressed ? 0.18 : isHovered ? 0.1 : 0.0
+        let isHighlighted = isPressed || isFocused || isHovered
+        let highlightOpacity: Double = isPressed ? 0.18 : isHighlighted ? 0.1 : 0.0
         
         label()
             .contentShape(Circle())
@@ -190,6 +192,8 @@ struct SourcePickerButton<Label: View, Picker: View>: View {
                     .opacity(0.01)
                     .contentShape(Circle())
                     .onHover { isHovered = $0 }
+                    .focusable()
+                    .onFocusChange { isFocused = $0 }
                     .simultaneousGesture(
                         DragGesture(minimumDistance: 0)
                             .updating($isPressed) { _, state, _ in
@@ -198,6 +202,7 @@ struct SourcePickerButton<Label: View, Picker: View>: View {
                     )
             }
             .animation(.easeInOut(duration: 0.12), value: isHovered)
+            .animation(.easeInOut(duration: 0.12), value: isFocused)
             .animation(.easeInOut(duration: 0.12), value: isPressed)
     }
     
