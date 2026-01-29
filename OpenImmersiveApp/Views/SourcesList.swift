@@ -180,30 +180,34 @@ struct SourcePickerButton<Label: View, Picker: View>: View {
     var body: some View {
         let isHighlighted = isPressed || isFocused || isHovered
         let highlightOpacity: Double = isPressed ? 0.18 : isHighlighted ? 0.1 : 0.0
-        
-        label()
-            .contentShape(Circle())
-            .overlay {
-                Circle()
-                    .fill(.white.opacity(highlightOpacity))
-            }
-            .overlay {
-                picker()
-                    .opacity(0.01)
-                    .contentShape(Circle())
-                    .onHover { isHovered = $0 }
-                    .focusable()
-                    .onFocusChange { isFocused = $0 }
-                    .simultaneousGesture(
-                        DragGesture(minimumDistance: 0)
-                            .updating($isPressed) { _, state, _ in
-                                state = true
-                            }
-                    )
-            }
-            .animation(.easeInOut(duration: 0.12), value: isHovered)
-            .animation(.easeInOut(duration: 0.12), value: isFocused)
-            .animation(.easeInOut(duration: 0.12), value: isPressed)
+
+        ZStack {
+            label()
+                .scaleEffect(isHighlighted ? 1.06 : 1.0)
+                .animation(.easeInOut(duration: 0.12), value: isHighlighted)
+        }
+        .contentShape(Circle())
+        .overlay {
+            Circle()
+                .fill(.white.opacity(highlightOpacity))
+        }
+        .overlay {
+            picker()
+                .opacity(0.01)
+                .contentShape(Circle())
+                .onHover { isHovered = $0 }
+                .focusable()
+                .onFocusChange { isFocused = $0 }
+                .simultaneousGesture(
+                    DragGesture(minimumDistance: 0)
+                        .updating($isPressed) { _, state, _ in
+                            state = true
+                        }
+                )
+        }
+        .animation(.easeInOut(duration: 0.12), value: isHovered)
+        .animation(.easeInOut(duration: 0.12), value: isFocused)
+        .animation(.easeInOut(duration: 0.12), value: isPressed)
     }
     
 }
