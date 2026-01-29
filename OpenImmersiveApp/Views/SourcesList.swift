@@ -82,19 +82,40 @@ struct SourcesPickerControls: View {
     var body: some View {
         @Bindable var appState = appState
         HStack {
-            GalleryVideoPicker(spatialVideosOnly: false) { item in
-                appState.applyFormatOptions(from: item)
-                appState.selectedItem = item
+            SourcePickerButton {
+                SourcesPickerLabel(
+                    title: "Open from Gallery",
+                    systemImage: "photo.on.rectangle"
+                )
+            } picker: {
+                GalleryVideoPicker(spatialVideosOnly: false) { item in
+                    appState.applyFormatOptions(from: item)
+                    appState.selectedItem = item
+                }
             }
             
-            FilePicker() { item in
-                appState.applyFormatOptions(from: item)
-                appState.selectedItem = item
+            SourcePickerButton {
+                SourcesPickerLabel(
+                    title: "Open from Files",
+                    systemImage: "folder"
+                )
+            } picker: {
+                FilePicker() { item in
+                    appState.applyFormatOptions(from: item)
+                    appState.selectedItem = item
+                }
             }
             
-            StreamUrlInput() { item in
-                appState.applyFormatOptions(from: item)
-                appState.selectedItem = item
+            SourcePickerButton {
+                SourcesPickerLabel(
+                    title: "Enter Stream URL",
+                    systemImage: "link"
+                )
+            } picker: {
+                StreamUrlInput() { item in
+                    appState.applyFormatOptions(from: item)
+                    appState.selectedItem = item
+                }
             }
             
             // Toggle(isOn: $areOptionsShowing.animation(.interactiveSpring)) {
@@ -106,6 +127,38 @@ struct SourcesPickerControls: View {
         .popover(isPresented: $areOptionsShowing) {
             SettingsPopoverContent(appState: appState)
         }
+    }
+}
+
+/// A styled button label that can be customized for source pickers.
+struct SourcesPickerLabel: View {
+    let title: String
+    let systemImage: String
+    
+    var body: some View {
+        Label(title, systemImage: systemImage)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 8)
+            .padding(.horizontal, 12)
+            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 12))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(.white.opacity(0.2), lineWidth: 1)
+            )
+    }
+}
+
+/// A wrapper that lets a custom-designed label drive an existing picker control.
+struct SourcePickerButton<Label: View, Picker: View>: View {
+    let label: () -> Label
+    let picker: () -> Picker
+    
+    var body: some View {
+        label()
+            .overlay {
+                picker()
+                    .opacity(0.01)
+            }
     }
 }
 
