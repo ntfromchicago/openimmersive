@@ -14,7 +14,7 @@ struct MainMenu: View {
             Image("new-logo-flat")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 256)
+                .frame(width: 160)
                 .padding(20)
             
             Text("OpenImmersive \(version)")
@@ -39,7 +39,8 @@ struct MainMenu: View {
             SourcesPickerControls()
                 .padding(.horizontal, 24)
                 .padding(.vertical, 16)
-                .background(.regularMaterial)
+                .glassBackgroundEffect()
+                .cornerRadius(32)
         }
     }
     

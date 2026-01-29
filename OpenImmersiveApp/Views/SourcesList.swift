@@ -27,18 +27,21 @@ struct SourcesList: View {
                 PlayButton() {
                     playVideo(selectedItem)
                 }
-                
-                SettingsButton(isPresented: $areOptionsShowing)
-                    .padding(.trailing, 20)
-                    .padding(.bottom, 12)
             }
             
             let videoTitle = selectedItem.metadata[.commonIdentifierTitle] ?? "<NONE>"
             let fieldOfView = appState.projection == .equirectangular ? " \(appState.fieldOfView)°" : ""
             let framePacking = appState.projection == .appleImmersive || appState.framePacking == .none ? "" : "(\(appState.framePacking.description))"
             
-            Text("Selected video: **\(videoTitle)**")
-            Text("Format: **\(appState.projection.rawValue)\(fieldOfView)** \(framePacking)")
+            HStack {
+                Spacer()
+                Text("Selected video: **\(videoTitle)**")
+                Text("Format: **\(appState.projection.rawValue)\(fieldOfView)** \(framePacking)")
+                Spacer()
+                SettingsButton(isPresented: $areOptionsShowing)
+                    .padding(.trailing, 20)
+                    .padding(.bottom, 12)
+            }
             
             Divider()
                 .padding(.vertical)
