@@ -82,10 +82,11 @@ struct SourcesPickerControls: View {
     var body: some View {
         @Bindable var appState = appState
         HStack {
-            Text("Open From")
+            Text("Open with")
+                .fixedSize()
             SourcePickerButton {
                 SourcesPickerLabel(
-                    title: "",
+                    title: "Gallery",
                     systemImage: "photo.on.rectangle"
                 )
             } picker: {
@@ -98,7 +99,7 @@ struct SourcesPickerControls: View {
             
             SourcePickerButton {
                 SourcesPickerLabel(
-                    title: "",
+                    title: "Files",
                     systemImage: "folder"
                 )
             } picker: {
@@ -111,7 +112,7 @@ struct SourcesPickerControls: View {
             
             SourcePickerButton {
                 SourcesPickerLabel(
-                    title: "",
+                    title: "Stream URL",
                     systemImage: "link"
                 )
             } picker: {
@@ -129,6 +130,7 @@ struct SourcesPickerControls: View {
             // .toggleStyle(.button)
             // .buttonBorderShape(.circle)
         }
+        .fixedSize(horizontal: true, vertical: false)
         .popover(isPresented: $areOptionsShowing) {
             SettingsPopoverContent(appState: appState)
         }
@@ -141,15 +143,16 @@ struct SourcesPickerLabel: View {
     let systemImage: String
     
     var body: some View {
-        Label(title, systemImage: systemImage)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 8)
-            .padding(.horizontal, 12)
-            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 12))
+        Image(systemName: systemImage)
+            .font(.system(size: 28, weight: .semibold))
+            .foregroundStyle(.primary)
+            .frame(width: 64, height: 64)
+            .background(.thinMaterial, in: Circle())
             .overlay(
-                RoundedRectangle(cornerRadius: 12)
+                Circle()
                     .stroke(.white.opacity(0.2), lineWidth: 1)
             )
+            .accessibilityLabel(Text(title))
     }
 }
 
@@ -160,6 +163,8 @@ struct SourcePickerButton<Label: View, Picker: View>: View {
     
     var body: some View {
         label()
+            .contentShape(Circle())
+            .hoverEffect(.highlight)
             .overlay {
                 picker()
                     .opacity(0.01)
