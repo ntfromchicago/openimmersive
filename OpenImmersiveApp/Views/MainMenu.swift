@@ -14,9 +14,8 @@ struct MainMenu: View {
             Image("new-logo-flat")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 160)
-                .padding(20)
-            
+                .frame(width: 120, height: 120)
+                .padding(8)
             Text("OpenImmersive \(version)")
                 .font(.largeTitle)
                 .accessibilityHint("A free, open source immersive video player")
@@ -26,15 +25,13 @@ struct MainMenu: View {
             
             SourcesList()
                 .padding(.vertical)
-            
         }
         .padding()
         .ornament(attachmentAnchor: .scene(.bottom)) {
             SourcesPickerControls()
-                .padding(.horizontal, 24)
-                .padding(.vertical, 16)
+                .padding(16)
                 .glassBackgroundEffect()
-                .cornerRadius(32)
+                .cornerRadius(120)
         }
     }
     

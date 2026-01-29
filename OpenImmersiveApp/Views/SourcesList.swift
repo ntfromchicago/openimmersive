@@ -15,7 +15,7 @@ struct SourcesList: View {
     @Environment(OpenImmersiveAppState.self) private var appState
     @State private var areOptionsShowing: Bool = false
     @State private var isInfoPresented: Bool = false
-    private let infoMessage = "This player supports Spatial Video, AIV Immersive Videos, MV-HEVC, side-by-side and over-under.\nUse the gear button to select the correct format and projection."
+    private let infoMessage = "This player supports Spatial, AIV Immersive, MV-HEVC, Side-By-Side and Over-Under videos."
     
     var body: some View {
         @Bindable var appState = appState
@@ -34,20 +34,22 @@ struct SourcesList: View {
             let videoTitle = selectedItem.metadata[.commonIdentifierTitle] ?? "<NONE>"
             let fieldOfView = appState.projection == .equirectangular ? " \(appState.fieldOfView)°" : ""
             let framePacking = appState.projection == .appleImmersive || appState.framePacking == .none ? "" : "(\(appState.framePacking.description))"
-            HStack {
+            
+            Spacer()
+            
+            HStack(alignment: .center) {
                 InfoButton {
                     isInfoPresented = true
                 }
-                .padding(.leading, 20)
-                .padding(.bottom, 12)
                 
                 Spacer()
-                Text("Selected video: **\(videoTitle)**")
-                Text("Format: **\(appState.projection.rawValue)\(fieldOfView)** \(framePacking)")
+                VStack() {
+                    Text("**\(videoTitle)**")
+                    Text("Play as **\(appState.projection.rawValue)\(fieldOfView)** \(framePacking)")
+                }
                 Spacer()
                 SettingsButton(isPresented: $areOptionsShowing)
-                    .padding(.trailing, 20)
-                    .padding(.bottom, 12)
+                    .help("Video format and projection options")
             }
             
             Divider()
@@ -56,8 +58,7 @@ struct SourcesList: View {
             Text("Maintained by [Anthony Maës](https://www.linkedin.com/in/portemantho/) & [Acute Immersive 🐶](https://www.acuteimmersive.com/)")
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 40)
-                .padding(.bottom)
-                .frame(maxWidth: .infinity)
+                .padding(.bottom, 40)
             
             // Text("\(Image(systemName: "info.circle")) This player supports Spatial Video, AIV Immersive Videos, MV-HEVC, side-by-side and over-under.\nUse the gear button to select the correct format and projection.")
             //     .font(.callout)
@@ -99,12 +100,10 @@ struct SourcesPickerControls: View {
     
     var body: some View {
         @Bindable var appState = appState
-        HStack {
-            Text("Open")
-                .fixedSize()
+        HStack(spacing: 16) {
             SourcePickerButton {
                 SourcesPickerLabel(
-                    title: "Gallery",
+                    title: "Open Gallery",
                     systemImage: "photo.on.rectangle"
                 )
             } picker: {
@@ -113,11 +112,11 @@ struct SourcesPickerControls: View {
                     appState.selectedItem = item
                 }
             }
-            .help("Gallery")
+            .help("Open Gallery")
             
             SourcePickerButton {
                 SourcesPickerLabel(
-                    title: "Files",
+                    title: "Open File",
                     systemImage: "folder"
                 )
             } picker: {
@@ -126,11 +125,11 @@ struct SourcesPickerControls: View {
                     appState.selectedItem = item
                 }
             }
-            .help("Files")
+            .help("Open File")
             
             SourcePickerButton {
                 SourcesPickerLabel(
-                    title: "Stream URL",
+                    title: "Open Stream URL",
                     systemImage: "link"
                 )
             } picker: {
@@ -139,7 +138,7 @@ struct SourcesPickerControls: View {
                     appState.selectedItem = item
                 }
             }
-            .help("Stream URL")
+            .help("Open Stream URL")
 
             
             // Toggle(isOn: $areOptionsShowing.animation(.interactiveSpring)) {
@@ -162,14 +161,10 @@ struct SourcesPickerLabel: View {
     
     var body: some View {
         Image(systemName: systemImage)
-            .font(.system(size: 28, weight: .semibold))
+            .font(.system(size: 28, weight: .regular))
             .foregroundStyle(.primary)
             .frame(width: 64, height: 64)
             .background(.thinMaterial, in: Circle())
-            .overlay(
-                Circle()
-                    .stroke(.white.opacity(0.2), lineWidth: 1)
-            )
             .accessibilityLabel(Text(title))
     }
 }
@@ -182,12 +177,14 @@ struct SourcePickerButton<Label: View, Picker: View>: View {
     var body: some View {
         label()
             .contentShape(Circle())
-            .hoverEffect(.highlight)
             .overlay {
                 picker()
                     .opacity(0.01)
             }
+            .focusable()
+            .hoverEffect(.highlight)
     }
+    
 }
 
 struct SettingsButton: View {

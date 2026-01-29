@@ -89,7 +89,7 @@ struct OpenImmersiveApp: App {
             }
             .frame(width: 720, height: 720)
         }
-        .windowResizability(.fixed)
+        // .windowResizability(.fixed)
         .defaultSize(width: 720, height: 720)
         .environment(appState)
         
