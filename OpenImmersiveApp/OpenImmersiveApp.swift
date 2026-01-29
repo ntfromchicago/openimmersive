@@ -87,10 +87,10 @@ struct OpenImmersiveApp: App {
                 appState.applyFormatOptions(from: item)
                 appState.selectedItem = item
             }
-            .frame(width: 800, height: 850)
+            .frame(width: 720, height: 720)
         }
-        .windowResizability(.contentSize)
-        .defaultSize(width: 800, height: 850)
+        .windowResizability(.fixed)
+        .defaultSize(width: 720, height: 720)
         .environment(appState)
         
         ImmersiveSpace(for: VideoItem.self) { $model in

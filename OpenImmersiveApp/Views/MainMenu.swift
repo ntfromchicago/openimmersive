@@ -27,12 +27,6 @@ struct MainMenu: View {
             SourcesList()
                 .padding(.vertical)
             
-            Spacer()
-            
-            Text("Maintained by [Anthony Maës](https://www.linkedin.com/in/portemantho/) & [Acute Immersive 🐶](https://www.acuteimmersive.com/)")
-                .padding(.horizontal, 40)
-                .padding(.vertical)
-                .frame(maxWidth: .infinity, alignment: .bottomLeading)
         }
         .padding()
         .ornament(attachmentAnchor: .scene(.bottom)) {

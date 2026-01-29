@@ -14,6 +14,8 @@ struct SourcesList: View {
     @Environment(\.dismissWindow) private var dismissWindow
     @Environment(OpenImmersiveAppState.self) private var appState
     @State private var areOptionsShowing: Bool = false
+    @State private var isInfoPresented: Bool = false
+    private let infoMessage = "This player supports Spatial Video, AIV Immersive Videos, MV-HEVC, side-by-side and over-under.\nUse the gear button to select the correct format and projection."
     
     var body: some View {
         @Bindable var appState = appState
@@ -32,8 +34,13 @@ struct SourcesList: View {
             let videoTitle = selectedItem.metadata[.commonIdentifierTitle] ?? "<NONE>"
             let fieldOfView = appState.projection == .equirectangular ? " \(appState.fieldOfView)°" : ""
             let framePacking = appState.projection == .appleImmersive || appState.framePacking == .none ? "" : "(\(appState.framePacking.description))"
-            
             HStack {
+                InfoButton {
+                    isInfoPresented = true
+                }
+                .padding(.leading, 20)
+                .padding(.bottom, 12)
+                
                 Spacer()
                 Text("Selected video: **\(videoTitle)**")
                 Text("Format: **\(appState.projection.rawValue)\(fieldOfView)** \(framePacking)")
@@ -46,14 +53,25 @@ struct SourcesList: View {
             Divider()
                 .padding(.vertical)
             
-            Text("\(Image(systemName: "info.circle")) This player supports Spatial Video, AIV Immersive Videos, MV-HEVC, side-by-side and over-under.\nUse the gear button to select the correct format and projection.")
-                .font(.callout)
-                .fixedSize(horizontal: false, vertical: true)
+            Text("Maintained by [Anthony Maës](https://www.linkedin.com/in/portemantho/) & [Acute Immersive 🐶](https://www.acuteimmersive.com/)")
                 .multilineTextAlignment(.center)
-                .padding()
+                .padding(.horizontal, 40)
+                .padding(.bottom)
+                .frame(maxWidth: .infinity)
+            
+            // Text("\(Image(systemName: "info.circle")) This player supports Spatial Video, AIV Immersive Videos, MV-HEVC, side-by-side and over-under.\nUse the gear button to select the correct format and projection.")
+            //     .font(.callout)
+            //     .fixedSize(horizontal: false, vertical: true)
+            //     .multilineTextAlignment(.center)
+            //     .padding()
         }
         .popover(isPresented: $areOptionsShowing) {
             SettingsPopoverContent(appState: appState)
+        }
+        .alert("Supported Formats", isPresented: $isInfoPresented) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(infoMessage)
         }
     }
     
@@ -82,7 +100,7 @@ struct SourcesPickerControls: View {
     var body: some View {
         @Bindable var appState = appState
         HStack {
-            Text("Open with")
+            Text("Open")
                 .fixedSize()
             SourcePickerButton {
                 SourcesPickerLabel(
@@ -180,6 +198,17 @@ struct SettingsButton: View {
             Image(systemName: "gearshape.fill")
         }
         .toggleStyle(.button)
+        .buttonBorderShape(.circle)
+    }
+}
+
+struct InfoButton: View {
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: "info.circle.fill")
+        }
         .buttonBorderShape(.circle)
     }
 }
