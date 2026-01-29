@@ -82,9 +82,10 @@ struct SourcesPickerControls: View {
     var body: some View {
         @Bindable var appState = appState
         HStack {
+            Text("Open From")
             SourcePickerButton {
                 SourcesPickerLabel(
-                    title: "Open from Gallery",
+                    title: "",
                     systemImage: "photo.on.rectangle"
                 )
             } picker: {
@@ -93,10 +94,11 @@ struct SourcesPickerControls: View {
                     appState.selectedItem = item
                 }
             }
+            .help("Gallery")
             
             SourcePickerButton {
                 SourcesPickerLabel(
-                    title: "Open from Files",
+                    title: "",
                     systemImage: "folder"
                 )
             } picker: {
@@ -105,10 +107,11 @@ struct SourcesPickerControls: View {
                     appState.selectedItem = item
                 }
             }
+            .help("Files")
             
             SourcePickerButton {
                 SourcesPickerLabel(
-                    title: "Enter Stream URL",
+                    title: "",
                     systemImage: "link"
                 )
             } picker: {
@@ -117,6 +120,8 @@ struct SourcesPickerControls: View {
                     appState.selectedItem = item
                 }
             }
+            .help("Stream URL")
+
             
             // Toggle(isOn: $areOptionsShowing.animation(.interactiveSpring)) {
             //     Image(systemName: "gearshape.fill")
