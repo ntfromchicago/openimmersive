@@ -39,6 +39,7 @@ struct MainMenu: View {
             SourcesPickerControls()
                 .padding(.horizontal, 24)
                 .padding(.vertical, 16)
+                .background(.regularMaterial)
         }
     }
     

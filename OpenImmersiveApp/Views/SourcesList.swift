@@ -13,6 +13,7 @@ struct SourcesList: View {
     @Environment(\.openImmersiveSpace) private var openImmersiveSpace
     @Environment(\.dismissWindow) private var dismissWindow
     @Environment(OpenImmersiveAppState.self) private var appState
+    @State private var areOptionsShowing: Bool = false
     
     var body: some View {
         @Bindable var appState = appState
@@ -22,8 +23,14 @@ struct SourcesList: View {
                 return appState.applyFormatOptions(to: item)
             }()
             
-            PlayButton() {
-                playVideo(selectedItem)
+            ZStack(alignment: .bottomTrailing) {
+                PlayButton() {
+                    playVideo(selectedItem)
+                }
+                
+                SettingsButton(isPresented: $areOptionsShowing)
+                    .padding(.trailing, 20)
+                    .padding(.bottom, 12)
             }
             
             let videoTitle = selectedItem.metadata[.commonIdentifierTitle] ?? "<NONE>"
@@ -41,6 +48,9 @@ struct SourcesList: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .multilineTextAlignment(.center)
                 .padding()
+        }
+        .popover(isPresented: $areOptionsShowing) {
+            SettingsPopoverContent(appState: appState)
         }
     }
     
@@ -84,72 +94,92 @@ struct SourcesPickerControls: View {
                 appState.selectedItem = item
             }
             
-            Toggle(isOn: $areOptionsShowing.animation(.interactiveSpring)) {
-                Image(systemName: "gearshape.fill")
-            }
-            .toggleStyle(.button)
-            .buttonBorderShape(.circle)
+            // Toggle(isOn: $areOptionsShowing.animation(.interactiveSpring)) {
+            //     Image(systemName: "gearshape.fill")
+            // }
+            // .toggleStyle(.button)
+            // .buttonBorderShape(.circle)
         }
         .popover(isPresented: $areOptionsShowing) {
-            VStack {
-                Text("Projection")
-                    .font(.headline.lowercaseSmallCaps())
-                ProjectionPicker(projection: $appState.projection, options: [.equirectangular, .rectilinear, .appleImmersive])
-                
-                let projectionDescription = switch appState.projection {
-                case .equirectangular: "The video will be projected onto a spherical screen.\nUse this setting for VR180 and VR360."
-                case .rectilinear: "The video will be played on a rectangular plane.\nUse this setting for Spatial Video and other rectilinear videos."
-                case .appleImmersive: "Use this setting for Apple Immersive Video only."
-                }
-                Text(projectionDescription)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .multilineTextAlignment(.center)
-                
-                if appState.projection == .equirectangular {
-                    Divider()
-                        .padding(.vertical, 10)
-                    
-                    Text("Horizontal Field of View")
-                        .font(.headline.lowercaseSmallCaps())
-                    FormatPicker(fieldOfView: $appState.fieldOfView, options: [65, 144, 180, 360])
-                        .padding(.top, 5)
-                    
-                    Toggle(isOn: $appState.forceFov.animation(.easeInOut)) {
-                        Text("Override encoded values")
-                    }
-                    .fixedSize()
-                }
-                
-                if appState.projection != .appleImmersive {
-                    Divider()
-                        .padding(.vertical, 10)
-                    
-                    Text("Frame Packing")
-                        .font(.headline.lowercaseSmallCaps())
-                    FramePackingPicker(framePacking: $appState.framePacking, options: [.none, .sideBySide, .overUnder])
-                    let packingDescription = switch appState.framePacking {
-                    case .none: "Use this setting for Spatial, MV-HEVC, APMP and Mono videos."
-                    case .sideBySide: "Use this setting for side-by-side videos (e.g. legacy 3D VR180)."
-                    case .overUnder: "Use this setting for over-under videos (e.g. legacy 3D VR360)."
-                    }
-                    Text(packingDescription)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .multilineTextAlignment(.center)
-                }
-                
+            SettingsPopoverContent(appState: appState)
+        }
+    }
+}
+
+struct SettingsButton: View {
+    @Binding var isPresented: Bool
+    
+    var body: some View {
+        Toggle(isOn: $isPresented.animation(.interactiveSpring)) {
+            Image(systemName: "gearshape.fill")
+        }
+        .toggleStyle(.button)
+        .buttonBorderShape(.circle)
+    }
+}
+
+struct SettingsPopoverContent: View {
+    @Bindable var appState: OpenImmersiveAppState
+    
+    var body: some View {
+        VStack {
+            Text("Projection")
+                .font(.headline.lowercaseSmallCaps())
+            ProjectionPicker(projection: $appState.projection, options: [.equirectangular, .rectilinear, .appleImmersive])
+            
+            let projectionDescription = switch appState.projection {
+            case .equirectangular: "The video will be projected onto a spherical screen.\nUse this setting for VR180 and VR360."
+            case .rectilinear: "The video will be played on a rectangular plane.\nUse this setting for Spatial Video and other rectilinear videos."
+            case .appleImmersive: "Use this setting for Apple Immersive Video only."
+            }
+            Text(projectionDescription)
+                .fixedSize(horizontal: false, vertical: true)
+                .multilineTextAlignment(.center)
+            
+            if appState.projection == .equirectangular {
                 Divider()
                     .padding(.vertical, 10)
                 
-                Text("Widgets")
+                Text("Horizontal Field of View")
                     .font(.headline.lowercaseSmallCaps())
-                Toggle(isOn: $appState.showTimecodeReadout.animation(.easeInOut)) {
-                    Text("Show timecode readout")
+                FormatPicker(fieldOfView: $appState.fieldOfView, options: [65, 144, 180, 360])
+                    .padding(.top, 5)
+                
+                Toggle(isOn: $appState.forceFov.animation(.easeInOut)) {
+                    Text("Override encoded values")
                 }
                 .fixedSize()
             }
-            .padding(.vertical, 20)
-            .padding()
+            
+            if appState.projection != .appleImmersive {
+                Divider()
+                    .padding(.vertical, 10)
+                
+                Text("Frame Packing")
+                    .font(.headline.lowercaseSmallCaps())
+                FramePackingPicker(framePacking: $appState.framePacking, options: [.none, .sideBySide, .overUnder])
+                let packingDescription = switch appState.framePacking {
+                case .none: "Use this setting for Spatial, MV-HEVC, APMP and Mono videos."
+                case .sideBySide: "Use this setting for side-by-side videos (e.g. legacy 3D VR180)."
+                case .overUnder: "Use this setting for over-under videos (e.g. legacy 3D VR360)."
+                }
+                Text(packingDescription)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .multilineTextAlignment(.center)
+            }
+            
+            Divider()
+                .padding(.vertical, 10)
+            
+            Text("Widgets")
+                .font(.headline.lowercaseSmallCaps())
+            Toggle(isOn: $appState.showTimecodeReadout.animation(.easeInOut)) {
+                Text("Show timecode readout")
+            }
+            .fixedSize()
         }
+        .padding(.vertical, 20)
+        .padding()
     }
 }
 
