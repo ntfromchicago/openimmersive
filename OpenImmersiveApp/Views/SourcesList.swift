@@ -299,10 +299,14 @@ struct SettingsPopoverContent: View {
             Divider()
                 .padding(.vertical)
             HStack {
-                Text("Widgets").bold()
+                Text("Extras").bold()
                 Spacer()
+                Toggle(isOn: $appState.showHands.animation(.easeInOut)) {
+                    Text("Hands")
+                }
+                .fixedSize()
                 Toggle(isOn: $appState.showTimecodeReadout.animation(.easeInOut)) {
-                    Text("Show timecode readout")
+                    Text("Timecode")
                 }
                 .fixedSize()
             }
@@ -397,4 +401,3 @@ extension VideoItem {
     SourcesList()
         .environment(OpenImmersiveAppState())
 }
-

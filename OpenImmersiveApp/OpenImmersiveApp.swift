@@ -31,6 +31,8 @@ class OpenImmersiveAppState {
     var framePacking: VideoItem.FramePacking = .none
     /// Whether to show the timecode readout view in the ImmersivePlayer.
     var showTimecodeReadout: Bool = false
+    /// Whether to show the user's hands in immersive view.
+    var showHands: Bool = false
     
     /// Updates the input VideoItem's `projection` value according to the corresponding user options.
     /// - Parameters:
@@ -122,6 +124,7 @@ struct OpenImmersiveApp: App {
                 customButtons: customButton,
                 customAttachments: [customAttachment]
             )
+            .upperLimbVisibility(appState.showHands ? .visible : .hidden)
         }
         .immersionStyle(selection: .constant(.full), in: .full)
     }
