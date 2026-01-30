@@ -1,50 +1,19 @@
-# OpenImmersive
-![OpenImmersive logo, representing a pair of red/blue anaglyphic glasses](OpenImmersiveApp/Media/openimmersive-logo.png)
+[ORIGINAL README](https://github.com/acuteimmersive/openimmersive/blob/c4dac16dfc750e6c409c183a408d113982673ca7/README.md)
 
-_A free and open source spatial & immersive video player for the Apple Vision Pro._
+# A Fork of OpenImmersive
 
-Maintained by [Anthony Maës](https://www.linkedin.com/in/portemantho/) & [Acute Immersive](https://acuteimmersive.com/), derived from [Spatial Player](https://github.com/mikeswanson/SpatialPlayer/) by [Mike Swanson](https://blog.mikeswanson.com/). See the [announcement on Medium](https://medium.com/@portemantho/openimmersive-the-free-and-open-source-immersive-video-player-a37f69556d16)!
+Last updated Jan. 29, 2026
 
-Because of significant interest in filmmakers for Immersive Video in the early days of the Apple Vision Pro, many developers have built their own players, often derived from Mike's open-source Spatial Player.
+Hello! This is a fork of the great work done by [Anthony Maës](https://www.linkedin.com/in/portemantho/) & [Acute Immersive](https://acuteimmersive.com/), derived from [Spatial Player](https://github.com/mikeswanson/SpatialPlayer/) by [Mike Swanson](https://blog.mikeswanson.com/).
 
-OpenImmersive aims to provide this community with a more complete player, with playback controls, error handling, media loading from HLS streaming and from the local photo gallery. The project and code are intentionally kept as concise as possible to find the right balance between turnkey readiness and modifiability.
+So you know my context, I've been working on lightweight 3D video apps and utilities for macOS and visionOS. I was aware of OpenImmersive at its launch but since it didn't support SBS (side-by-side) video playback, I didn't pay much attention to it until version 1.6, where support was added.
 
-## Features
-* The xcode project contains **OpenImmersiveApp**, the visionOS app, which depends on **OpenImmersiveLib**, an easy-to-integrate Swift package that lives on its own github repository: [https://github.com/acuteimmersive/openimmersivelib](https://github.com/acuteimmersive/openimmersivelib)
-* **This player supports immersive and spatial videos in MV-HEVC, AIVU, Side-by-Side and Over-Under formats.**
-* Load a video from various sources: photo gallery, local files/documents, HLS streaming playlist URL, or by dragging a video onto the window.
-* Control playback with Play/Pause buttons, +15/-15 second buttons, and an interactable scrubber in an auto-dismiss control panel.
-* Select resolution/bandwidth and audio track when streaming videos.
-* Play AIV with full spatial audio support!
-* Add your custom UI panels to the player like the timecode readout built into the app.
+The purpose of this fork is to refine some of the UI design of the container app, to reduce cognitive load and improve visual alignment. NONE of these changes are a criticism of the original design. Simply, they're my personal design preferences, which I do plan to document in this repo in the future, if you're a designer interested in such redesigns.
 
-## Requirements
-* macOS with Xcode 26 or later
-* for on-device testing: visionOS 26.0 or later
+I also redesigned the app icon, probably for the worse, as it may deviate too much from existing OpenImmersive brand standards.
 
-## Usage
-- Clone the repo
-- Open the project in Xcode
-- Update the signing settings (select the correct development team)
-- Select the build target (visionOS Simulator or Apple Vision Pro)
-- Run (⌘R)
+I have no plans to add major functionality to this fork except for tiny stuff. For example, the recent addition of toggling hands on and off.
 
-Or install the app from the [visionOS AppStore](https://apps.apple.com/us/app/openimmersive/id6737087083).
+Also, this fork uses multiple AI coding tools. So if you're looking for coding best practices and non-sloppy code, you my friend are checking out the wrong fork. Also, just because I say I'm trying to get the UI closer to the HIG, won't mean that I'll actually achieve it!
 
-## Integrate OpenImmersive in your project
-- Open your visionOS app in xcode.
-- Go to File > Add Package Dependencies...
-- Copy-paste the repo URL `github.com/acuteimmersive/openimmersivelib` in the search bar at the top right of the popup.
-- Click Add Package, and use `import OpenImmersive` to use the lib's classes and structs in your app.
-
-## Contributions
-While this project aims to remain relatively concise and lightweight to allow for modifiability, the community could use improvements and new features. Contributions are greatly appreciated!
-
-### Desired improvements:
-- Subtitles support
-- Improved Spatial Audio support
-- Format auto detection from HLS manifest
-- SharePlay support
-
-Special thanks to [Zachary Handshoe](https://www.linkedin.com/in/zachary-handshoe/) from [SpatialGen](https://spatialgen.com/) for his contributions.
-Special thanks to [SINTEF](https://www.sintef.no/) and [Gassco](https://gassco.eu/) for supporting development.
+Finally, this repo doesn't touch the library package at all. I have zero interest at this time in modding the library, as I want to stay aligned with future changes. But that constraint is sometimes the reason why some of the UI is wacky (e.g. the lack of gaze highlights on the toolbar buttons).
