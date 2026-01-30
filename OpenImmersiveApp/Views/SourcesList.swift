@@ -52,7 +52,7 @@ struct SourcesList: View {
                     .help("Video format and projection options")
                     .popover(isPresented: $areOptionsShowing) {
                         SettingsPopoverContent(appState: appState)
-                            .frame(width: 640, height: 640)
+                            .frame(width: 640, height: 560)
                     }
             }
             
@@ -185,23 +185,24 @@ struct SourcePickerButton<Label: View, Picker: View>: View {
                 .animation(.easeInOut(duration: 0.12), value: isHighlighted)
         }
         .contentShape(Circle())
+        .hoverEffect(.highlight)
+        .overlay {
+            picker()
+                .opacity(0.01)
+                .allowsHitTesting(true)
+        }
         .overlay {
             Circle()
                 .fill(.white.opacity(highlightOpacity))
         }
-        .overlay {
-            picker()
-                .opacity(0.01)
-                .contentShape(Circle())
-                .onHover { isHovered = $0 }
-                .focusable()
-                .simultaneousGesture(
-                    DragGesture(minimumDistance: 0)
-                        .updating($isPressed) { _, state, _ in
-                            state = true
-                        }
-                )
-        }
+        .onHover { isHovered = $0 }
+        .focusable()
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 0)
+                .updating($isPressed) { _, state, _ in
+                    state = true
+                }
+        )
         .animation(.easeInOut(duration: 0.12), value: isHovered)
         .animation(.easeInOut(duration: 0.12), value: isFocused)
         .animation(.easeInOut(duration: 0.12), value: isPressed)
