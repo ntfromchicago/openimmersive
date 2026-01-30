@@ -305,6 +305,7 @@ struct SettingsPopoverContent: View {
                     Text("Hands")
                 }
                 .fixedSize()
+                Spacer()
                 Toggle(isOn: $appState.showTimecodeReadout.animation(.easeInOut)) {
                     Text("Timecode")
                 }
