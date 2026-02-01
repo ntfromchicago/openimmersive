@@ -23,3 +23,7 @@ Finally, this repo doesn't touch the library package at all. I have zero interes
 Another thing I forgot to mention in the text below is that I wanted to square off and prevent resizing of the window. Resizing isn't necessary (there isn't more content to show and hide) and squaring perfectly centers the prominent play button, which is definitely a design feature I wanted to preserve in the redesign.
 
 <img src="https://github.com/ntfromchicago/openimmersive/blob/be746fab61179a3daff40c837058a39e3959e903/OpenImmersive%20Main%20Screen%20Redesign.png">
+
+## Redesign Rationale: Settings Screen
+
+<img src="https://github.com/ntfromchicago/openimmersive/blob/bcd854cf4a4df6709edea70d01f49fc074ea2e3d/OpenImmersive%20Settings%20Screen%20Redesign.png">
