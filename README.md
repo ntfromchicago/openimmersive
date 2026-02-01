@@ -17,3 +17,7 @@ I have no plans to add major functionality to this fork except for tiny stuff. F
 Also, this fork uses multiple AI coding tools. So if you're looking for coding best practices and non-sloppy code, you my friend are checking out the wrong fork. Also, just because I say I'm trying to get the UI closer to the HIG, won't mean that I'll actually achieve it!
 
 Finally, this repo doesn't touch the library package at all. I have zero interest at this time in modding the library, as I want to stay aligned with future changes. But that constraint is sometimes the reason why some of the UI is wacky (e.g. the lack of gaze highlights on the toolbar buttons).
+
+## Redesign Rationale: Main Screen
+
+<img src="https://github.com/ntfromchicago/openimmersive/blob/be746fab61179a3daff40c837058a39e3959e903/OpenImmersive%20Main%20Screen%20Redesign.png">
