@@ -2,7 +2,7 @@
 
 # A Fork of OpenImmersive
 
-Last updated Jan. 29, 2026
+Last updated Feb. 1, 2026
 
 Hello! This is a fork of the great work done by [Anthony Maës](https://www.linkedin.com/in/portemantho/) & [Acute Immersive](https://acuteimmersive.com/), derived from [Spatial Player](https://github.com/mikeswanson/SpatialPlayer/) by [Mike Swanson](https://blog.mikeswanson.com/).
 
@@ -19,5 +19,7 @@ Also, this fork uses multiple AI coding tools. So if you're looking for coding b
 Finally, this repo doesn't touch the library package at all. I have zero interest at this time in modding the library, as I want to stay aligned with future changes. But that constraint is sometimes the reason why some of the UI is wacky (e.g. the lack of gaze highlights on the toolbar buttons).
 
 ## Redesign Rationale: Main Screen
+
+Another thing I forgot to mention in the text below is that I wanted to square off and prevent resizing of the window. Resizing isn't necessary (there isn't more content to show and hide) and squaring perfectly centers the prominent play button, which is definitely a design feature I wanted to preserve in the redesign.
 
 <img src="https://github.com/ntfromchicago/openimmersive/blob/be746fab61179a3daff40c837058a39e3959e903/OpenImmersive%20Main%20Screen%20Redesign.png">
