@@ -216,10 +216,16 @@ class OpenImmersiveAppState {
         }
     }
 
-    /// Persists current settings for the selected item, preserving any previously stored playback position.
+    /// Persists current settings for the selected item, preserving any previously stored playback position,
+    /// and arms a resume seek for the upcoming immersive playback if a position is on file.
     func saveSettingsToCache() {
         guard let item = selectedItem else { return }
         cache.save(currentEntry(preservingPositionFor: item.id), for: item.id)
+        if let entry = cache.entry(for: item.id), entry.lastPosition > 0 {
+            pendingResumeTime = entry.lastPosition
+        } else {
+            pendingResumeTime = nil
+        }
     }
 
     /// Persists a new playback position for the selected item.
@@ -251,26 +257,28 @@ class OpenImmersiveAppState {
     }
 }
 
-/// Invisible attachment view that captures the active VideoPlayer and applies any pending resume seek.
-struct PlayerLifecycleCapture: View {
+/// A wrapper around `TimecodeToggle` that piggybacks on the always-rendered control panel button slot
+/// to capture the active VideoPlayer reference and perform a pending resume seek.
+struct PlayerCaptureToggle: View {
     let videoPlayer: VideoPlayer
     let appState: OpenImmersiveAppState
 
     var body: some View {
-        Color.clear
-            .frame(width: 0.001, height: 0.001)
-            .task {
-                appState.currentVideoPlayer = videoPlayer
-                if let resume = appState.pendingResumeTime {
-                    appState.pendingResumeTime = nil
-                    // Give the player a moment to load the asset before seeking.
-                    try? await Task.sleep(for: .milliseconds(500))
-                    videoPlayer.seek(to: resume)
-                }
+        TimecodeToggle(isOn: Binding(
+            get: { appState.showTimecodeReadout },
+            set: { appState.showTimecodeReadout = $0 }
+        ))
+        .task {
+            appState.currentVideoPlayer = videoPlayer
+            guard let resume = appState.pendingResumeTime else { return }
+            appState.pendingResumeTime = nil
+            // Wait for the asset to be ready before seeking (poll for non-zero duration).
+            for _ in 0..<100 {
+                if videoPlayer.duration > 0 { break }
+                try? await Task.sleep(for: .milliseconds(100))
             }
-            .onDisappear {
-                appState.currentVideoPlayer = nil
-            }
+            videoPlayer.seek(to: resume)
+        }
     }
 }
 
@@ -299,16 +307,17 @@ struct OpenImmersiveApp: App {
                 if let player = appState.currentVideoPlayer {
                     appState.saveTimecodeToCache(player.currentTime)
                 }
+                appState.currentVideoPlayer = nil
                 Task {
                     openWindow(id: "MainWindow")
                     await dismissImmersiveSpace()
                 }
             }
 
-            // customButton and customAttachment are provided for illustration purposes.
-            // In order to inject multiple buttons, just nest them in a HStack.
-            let customButton: CustomViewBuilder = { _ in
-                TimecodeToggle(isOn: $appState.showTimecodeReadout)
+            // The customButton lives inside the always-rendered ControlPanel, so we use it as the
+            // reliable lifecycle anchor for capturing the VideoPlayer reference and applying resume seeks.
+            let customButton: CustomViewBuilder = { $videoPlayer in
+                PlayerCaptureToggle(videoPlayer: videoPlayer, appState: appState)
             }
             let customAttachment = CustomAttachment(
                 id: "TimecodeReadout",
@@ -320,21 +329,11 @@ struct OpenImmersiveApp: App {
                 relativeToControlPanel: true
             )
 
-            let playerCaptureAttachment = CustomAttachment(
-                id: "PlayerLifecycleCapture",
-                body: { $videoPlayer in
-                    PlayerLifecycleCapture(videoPlayer: videoPlayer, appState: appState)
-                },
-                position: [0, -100, 0],
-                orientation: simd_quatf(angle: 0, axis: [1, 0, 0]),
-                relativeToControlPanel: false
-            )
-
             ImmersivePlayer(
                 selectedItem: model!,
                 closeAction: closeAction,
                 customButtons: customButton,
-                customAttachments: [customAttachment, playerCaptureAttachment]
+                customAttachments: [customAttachment]
             )
             .upperLimbVisibility(appState.showHands ? .visible : .hidden)
         }
