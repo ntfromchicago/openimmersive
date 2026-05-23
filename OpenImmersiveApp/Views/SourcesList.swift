@@ -27,6 +27,7 @@ struct SourcesList: View {
             
             ZStack(alignment: .bottomTrailing) {
                 PlayButton() {
+                    appState.saveSettingsToCache()
                     playVideo(selectedItem)
                 }
             }
@@ -294,6 +295,28 @@ struct SettingsPopoverContent: View {
                     .fixedSize(horizontal: false, vertical: true)
                     .multilineTextAlignment(.center)
                     .padding(8)
+
+                if appState.framePacking != .none {
+                    HStack {
+                        Text("Baseline").bold()
+                        Spacer()
+                        Stepper(
+                            "\(Int(appState.baseline)) mm",
+                            value: $appState.baseline,
+                            in: 30...100,
+                            step: 1
+                        )
+                        .fixedSize()
+                        Button {
+                            appState.baseline = 65.0
+                        } label: {
+                            Image(systemName: "arrow.counterclockwise")
+                        }
+                        .buttonBorderShape(.circle)
+                        .disabled(appState.baseline == 65.0)
+                        .help("Reset baseline to default (65 mm)")
+                    }
+                }
             }
             
             Divider()
